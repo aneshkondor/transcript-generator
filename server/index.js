@@ -4,8 +4,8 @@ const bodyParser = require('body-parser')
 const sqlite3 = require('sqlite3').verbose()
 const path = require('path')
 
-// Initialize SQLite database
-const dbPath = path.resolve(__dirname, 'data.sqlite')
+// Use persistent disk path for SQLite (Render or local)
+const dbPath = process.env.SQLITE_FILE || path.resolve(__dirname, 'data.sqlite')
 const db = new sqlite3.Database(dbPath)
 
 // Create tables if not exist
@@ -45,6 +45,9 @@ db.serialize(() => {
 const app = express()
 app.use(cors())
 app.use(bodyParser.json())
+
+// Health check endpoint for Render
+app.get('/healthz', (req, res) => res.send('ok'))
 
 // Auth endpoints
 app.post('/api/auth/login', (req, res) => {
