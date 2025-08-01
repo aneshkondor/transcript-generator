@@ -140,7 +140,12 @@ app.get('/api/transcripts/ssn/:ssn', (req, res) => {
   )
 })
 
-// File storage endpoints (Optional: implement file handling with filesystem)
+// Serve React static files
+const staticPath = path.resolve(__dirname, '../dist')
+app.use(express.static(staticPath))
+app.get('*', (req, res) => {
+  res.sendFile(path.join(staticPath, 'index.html'))
+})
 
 const PORT = process.env.PORT || 4000
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`))
